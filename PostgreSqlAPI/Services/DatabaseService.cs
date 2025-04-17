@@ -81,5 +81,31 @@ namespace PostgreSqlAPI.Services
             }
             return tables;
         }
+
+        public async Task<List<Dictionary<string, object>>> GetDataFromTableAsync(string schema, string table)
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // Corrected SQL query string to avoid syntax errors
+            var sql = $"SELECT * FROM {schema}.\"{table}\";";
+
+            using var cmd = new NpgsqlCommand(sql, conn);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            var result = new List<Dictionary<string, object>>();
+            while (await reader.ReadAsync())
+            {
+                var row = new Dictionary<string, object>();
+                for (var i = 0; i < reader.FieldCount; i++)
+                {
+                    row[reader.GetName(i)] = reader.GetValue(i);
+                }
+                result.Add(row);
+            }
+
+            return result;
+        }
+
     }
 }

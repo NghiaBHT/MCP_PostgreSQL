@@ -66,5 +66,21 @@ namespace PostgreSqlAPI.Controllers
                 return BadRequest($"Database error: {ex.Message}");
             }
         }
+
+        [HttpGet("data/{schema}/{table}")]
+        public async Task<IActionResult> GetData(string schema, string table)
+        {
+            if (string.IsNullOrWhiteSpace(schema) || string.IsNullOrWhiteSpace(table))
+                return BadRequest("Schema and table names are required.");
+            try
+            {
+                var data = await _dbService.GetDataFromTableAsync(schema, table);
+                return Ok(data);
+            }
+            catch (NpgsqlException ex)
+            {
+                return BadRequest($"Database error: {ex.Message}");
+            }
+        }
     }
 }
