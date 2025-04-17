@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSqlAPI", "PostgreSql
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMcpPostgreSQL", "ConsoleMcpPostgreSQL\ConsoleMcpPostgreSQL.csproj", "{D3AD7EB9-C3E6-408E-BFAF-93E13AB21931}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSqlAPI_UnitTest", "PostgreSqlAPI_UnitTest\PostgreSqlAPI_UnitTest.csproj", "{53BCB1F5-6D8D-405A-87AF-5668F6728947}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D3AD7EB9-C3E6-408E-BFAF-93E13AB21931}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3AD7EB9-C3E6-408E-BFAF-93E13AB21931}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3AD7EB9-C3E6-408E-BFAF-93E13AB21931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53BCB1F5-6D8D-405A-87AF-5668F6728947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53BCB1F5-6D8D-405A-87AF-5668F6728947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53BCB1F5-6D8D-405A-87AF-5668F6728947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53BCB1F5-6D8D-405A-87AF-5668F6728947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
