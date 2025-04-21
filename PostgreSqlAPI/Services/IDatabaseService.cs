@@ -9,5 +9,6 @@ namespace PostgreSqlAPI.Services
         Task<List<ColumnSchema>> GetTableSchemaAsync(string schema, string table);
         Task<List<TableSchema>> GetTablesAsync();
         Task<List<Dictionary<string, object>>> GetDataFromTableAsync(string schema, string table);
+        Task<List<DbSchema>> GetTableAndValueInforDB();
     }
 }

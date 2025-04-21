@@ -125,6 +125,37 @@ namespace ConsoleMcpPostgreSQL
                 throw;
             }
         }
+
+        public async Task<IEnumerable<DbSchema>> GetTableAndColumnInfoAsync()
+        {
+            try
+            {
+                // Fetch all tables
+                var tables = await GetTablesAsync();
+                var dbSchemas = new List<DbSchema>();
+
+                foreach (var table in tables)
+                {
+                    // Fetch column schema for each table
+                    var columns = await GetTableSchemaAsync(table.Schema!, table.Table!);
+
+                    dbSchemas.Add(new DbSchema
+                    {
+                        TableName = table.Table,
+                        Columns = columns.ToList()
+                    });
+                }
+
+                return dbSchemas;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving table and column information");
+                throw;
+            }
+        }
+
+
     }
 
     // Model classes for API responses
@@ -144,4 +175,11 @@ namespace ConsoleMcpPostgreSQL
     {
         public List<ColumnSchema> Columns { get; set; } = new List<ColumnSchema>();
     }
+
+    public class DbSchema
+    {
+        public string? TableName { get; set; }
+        public List<ColumnSchema> Columns { get; set; } = new List<ColumnSchema>();
+    }
+
 }

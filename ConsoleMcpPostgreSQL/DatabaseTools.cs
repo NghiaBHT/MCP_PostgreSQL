@@ -79,5 +79,20 @@ namespace ConsoleMcpPostgreSQL
                 throw new ApplicationException($"Failed to get data: {ex.Message}", ex);
             }
         }
+
+        [McpServerTool, Description("Get a list of all tables and their columns in the PostgreSQL database")]
+        public async Task<string> GetTableAndColumnInfo()
+        {
+            try
+            {
+                var tableAndColumnInfo = await _databaseService.GetTableAndColumnInfoAsync();
+                return JsonSerializer.Serialize(tableAndColumnInfo, _jsonOptions);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Failed to get table and column information: {ex.Message}", ex);
+            }
+        }
+
     }
 }

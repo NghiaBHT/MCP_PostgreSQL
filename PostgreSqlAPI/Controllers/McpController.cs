@@ -82,5 +82,19 @@ namespace PostgreSqlAPI.Controllers
                 return BadRequest($"Database error: {ex.Message}");
             }
         }
+
+        [HttpGet("dbschema")]
+        public async Task<IActionResult> GetDbSchema()
+        {
+            try
+            {
+                var dbSchemas = await _dbService.GetTableAndValueInforDB();
+                return Ok(dbSchemas);
+            }
+            catch (NpgsqlException ex)
+            {
+                return BadRequest($"Database error: {ex.Message}");
+            }
+        }
     }
 }
