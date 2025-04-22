@@ -4,9 +4,9 @@ namespace PostgreSqlAPI.Models;
 
 public class DatabaseConnectionModel
 {
-    public string Host { get; set; } = "localhost";
-    public string Port { get; set; } = "5432";
-    public string Database { get; set; } = "CompanyEmployee";
-    public string Username { get; set; } = "postgres";
-    public string Password { get; set; } = "20122001";
+    public string Host { get; set; }
+    public string Port { get; set; }
+    public string Database { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }
