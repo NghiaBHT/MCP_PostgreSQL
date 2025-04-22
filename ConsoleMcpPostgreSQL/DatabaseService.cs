@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using ConsoleMcpPostgreSQL.Models;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ConsoleMcpPostgreSQL
 {
@@ -157,29 +153,4 @@ namespace ConsoleMcpPostgreSQL
 
 
     }
-
-    // Model classes for API responses
-    public class ColumnSchema
-    {
-        public string? Name { get; set; }
-        public string? Type { get; set; }
-    }
-
-    public class TableSchema
-    {
-        public string? Schema { get; set; }
-        public string? Table { get; set; }
-    }
-
-    public class SchemaResponse
-    {
-        public List<ColumnSchema> Columns { get; set; } = new List<ColumnSchema>();
-    }
-
-    public class DbSchema
-    {
-        public string? TableName { get; set; }
-        public List<ColumnSchema> Columns { get; set; } = new List<ColumnSchema>();
-    }
-
 }
