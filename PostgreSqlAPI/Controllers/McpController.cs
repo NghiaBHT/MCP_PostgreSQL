@@ -96,5 +96,13 @@ namespace PostgreSqlAPI.Controllers
                 return BadRequest($"Database error: {ex.Message}");
             }
         }
+
+        [HttpPost("set-connection-string")]
+        public IActionResult SetConnectionString([FromBody] DatabaseConnectionModel connectionModel)
+        {
+            var connectionString = $"Host={connectionModel.Host};Port={connectionModel.Port};Database={connectionModel.Database};Username={connectionModel.Username};Password={connectionModel.Password};";
+            DatabaseService.SetConnectionString(connectionString);
+            return Ok("Connection string updated successfully.");
+        }
     }
 }

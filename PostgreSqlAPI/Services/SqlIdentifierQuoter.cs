@@ -9,11 +9,18 @@ namespace PostgreSqlAPI.Services
         private static readonly Regex FromJoinRegex = new(@"(?<=\bFROM\s|\bJOIN\s)([A-Za-z_][A-Za-z0-9_]*)(?:\s+(?:AS\s+)?([A-Za-z_][A-Za-z0-9_]*))?", RegexOptions.IgnoreCase);
         private static readonly Regex SelectColumnRegex = new(@"\bSELECT\s+(.*?)\bFROM\b", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex ColumnRefRegex = new(@"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)", RegexOptions.IgnoreCase);
+        private static readonly Regex OrderByRegex = new(@"\bORDER\s+BY\s+(.*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private readonly NpgsqlCommandBuilder _commandBuilder = new();
 
         public string QuoteSqlIdentifiers(string rawSql)
         {
+            // Check if the SQL query already contains quoted identifiers
+            if (rawSql.Contains("\""))
+            {
+                return rawSql; // Return the query as is if it already contains quotes
+            }
+
             var sql = rawSql;
 
             // Step 1: Quote table names in FROM and JOIN
@@ -64,6 +71,28 @@ namespace PostgreSqlAPI.Services
                     return match.Value;
 
                 return $"{alias}.{_commandBuilder.QuoteIdentifier(col)}";
+            });
+
+            // Step 4: Quote columns in ORDER BY
+            sql = OrderByRegex.Replace(sql, match =>
+            {
+                var orderByPart = match.Groups[1].Value;
+                var columns = orderByPart.Split(',');
+
+                var quotedColumns = columns.Select(c =>
+                {
+                    var col = c.Trim();
+
+                    if (col.Contains("."))
+                    {
+                        var parts = col.Split('.');
+                        return $"{parts[0]}.{_commandBuilder.QuoteIdentifier(parts[1])}";
+                    }
+
+                    return _commandBuilder.QuoteIdentifier(col);
+                });
+
+                return $"ORDER BY {string.Join(", ", quotedColumns)}";
             });
 
             return sql;

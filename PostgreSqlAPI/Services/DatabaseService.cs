@@ -8,11 +8,22 @@ namespace PostgreSqlAPI.Services
     public class DatabaseService : IDatabaseService
     {
         private readonly string _connectionString;
+        private static string? _dynamicConnectionString;
 
         public DatabaseService(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("Postgres") ??
                 throw new ArgumentNullException(nameof(configuration), "PostgreSQL connection string is missing.");
+        }
+
+        public static void SetConnectionString(string connectionString)
+        {
+            _dynamicConnectionString = connectionString;
+        }
+
+        private string GetConnectionString()
+        {
+            return _dynamicConnectionString ?? _connectionString;
         }
 
         public async Task<List<Dictionary<string, object>>> ExecuteQueryAsync(string sql)
@@ -21,7 +32,7 @@ namespace PostgreSqlAPI.Services
             // Preprocess SQL to handle unquoted table names
             sql = quoter.QuoteSqlIdentifiers(sql);
 
-            using var connection = new NpgsqlConnection(_connectionString);
+            using var connection = new NpgsqlConnection(GetConnectionString());
             await connection.OpenAsync();
             using var command = new NpgsqlCommand(sql, connection);
             using var reader = await command.ExecuteReaderAsync();
@@ -40,7 +51,7 @@ namespace PostgreSqlAPI.Services
 
         public async Task<List<DbSchema>> GetTableAndValueInforDB()
         {
-            using var conn = new NpgsqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(GetConnectionString());
             await conn.OpenAsync();
             var tables = await GetTablesAsync();
             var dbSchemas = new List<DbSchema>();
@@ -64,7 +75,7 @@ namespace PostgreSqlAPI.Services
 
         public async Task<List<ColumnSchema>> GetTableSchemaAsync(string schema, string table)
         {
-            using var conn = new NpgsqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(GetConnectionString());
             await conn.OpenAsync();
             var sql = @"
             SELECT column_name, data_type
@@ -89,7 +100,7 @@ namespace PostgreSqlAPI.Services
 
         public async Task<List<TableSchema>> GetTablesAsync()
         {
-            using var conn = new NpgsqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(GetConnectionString());
             await conn.OpenAsync();
             var sql = @"
             SELECT table_schema, table_name
@@ -113,7 +124,7 @@ namespace PostgreSqlAPI.Services
 
         public async Task<List<Dictionary<string, object>>> GetDataFromTableAsync(string schema, string table)
         {
-            using var conn = new NpgsqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(GetConnectionString());
             await conn.OpenAsync();
 
             // Corrected SQL query string to avoid syntax errors
